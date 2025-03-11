@@ -1,0 +1,68 @@
+1. df에서 사용하지 않는 컬럼 drop
+
+- 여러개 컬럼을 리스트로 담아서 drop.
+list_cols_drop = [ 'col1', 'col2',..,'col3' ]
+df_data = df_data.drop(colums=lis_cols_drop)
+
+- 한개 컬럼만 String으로 담아서 drop.
+str_col = 'col1'
+df_data = df_data.drop(colums=[str_col])
+=> 다른 표현 법
+df_data.drop(colums=[str_col], inplace=True)  : inplace default False
+df_data = df_data.drop('col1', axis=1)  : axis default 0
+
+- 변수 선언 없이 바로 drop.
+df_data = df_data.drop(
+	columns=[
+		'col1',
+		'col2',
+	]
+)
+
+- drop 함수
+def fn_drop_column(p_df, p_like_string) -> pd.DataFrame:
+    list_col = list(p_df.columns)
+    for val in list_col:
+        if p_like_string in val:
+            p_df = p_df.drop(columns=val)
+    return p_df
+
+ df_in_Line = df_in_Line.drop('Line.[Line Valid Flag]', axis=1)
+ 
+ 
+df_in_Line.drop(columns=['Resource.[Resource]', 'Resource.[Resource Type]'], inplace=True)
+
+2. copy 
+
+- 독립된 데이터셋으로 복사
+df_data1 = df_data.copy(deep=True)  : deep default True
+=
+df_data1 = df_data.copy()
+
+- 연결된 데이터프레임으로 복사 : 어느 한쪽의 데이타가 변경 시 같이 변경됨.
+df_data1 = df_data.copy(deep=False) 
+
+3. reset_index
+
+- index 재설정 시 기존 index 제거
+df_data.reset_index(drop=True) : default False
+
+- index 재설정 시 기존 index 남김
+df_data.reset_index()
+
+4. concat(데이터프레임리스트)
+
+- default axis=0 이므로 행방향(아래)로 붙인다. df에 존재하지 않는 컬럼값은 Nan으로 채움, index값은 각 df의 index값을 가져옴.
+resutl1 = pd.concat([df1,df2])
+
+- ignore_index=True 로 인덱스 재배열
+result2 = pd.concat([df1,df2], ignore_index=True)
+
+- axis=1 : 열방향(오른쪽)으로 붙인다. 인덱스 값 기준으로 열방행으로 데이터를 붙인다.
+result3 = pd.concat([df1,df2], axis=1)
+
+- join : default 'outer'  합집합
+- join : 'inner'  교집합
+result3_in = pd.concat([df1,df2],axis=1, join='inner')   #열방향(axis=1), 교집합(inner)
+
+- 데이터프레임에 시리즈 붙이기
